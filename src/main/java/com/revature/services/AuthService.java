@@ -3,7 +3,7 @@ package com.revature.services;
 import com.revature.models.Role;
 import com.revature.models.User;
 
-public class AuthServices {
+public class AuthService {
 
 	public User login(String username, String password) {
 		

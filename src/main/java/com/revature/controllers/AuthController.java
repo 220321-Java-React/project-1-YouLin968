@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 import com.revature.models.LoginDTO;
+import com.revature.services.AuthService;
 
 import io.javalin.http.Handler;
 
@@ -13,7 +14,7 @@ public class AuthController {
 	
 	static HttpSession ses;
 	
-	public Handler login Handler = (ctx) -> {
+	public Handler loginHandler = (ctx) -> {
 		
 		String body = ctx.body();
 		
@@ -21,7 +22,7 @@ public class AuthController {
 		
 		LoginDTO LDTO = gson.fromJson(body,  LoginDTO.class);
 		
-		if(as.login(LDTO.getUsername(), LDTO.getPassword() != null) {
+		if(as.login(LDTO.getUsername(), LDTO.getPassword()) != null) {
 			
 			ses = ctx.req.getSession(true);
 			

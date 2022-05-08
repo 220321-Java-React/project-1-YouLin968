@@ -16,13 +16,13 @@ public class UserController {
 		
 		if(AuthController.ses != null) {
 			
-			ArrayList<User> users = es.getUsers();
+			ArrayList<User> users = us.getUsers();
 			
 			Gson gson = new Gson();
 			
-			String JSONEmployees = gson.toJson(users);
+			String JSONUsers = gson.toJson(users);
 			
-			ctxresult(JSONUsers);
+			
 			
 			ctx.result(JSONUsers);
 			ctx.status(200);

@@ -3,7 +3,7 @@ const url = "http://localhost:3000"; //putting our base URL in a variable for cl
 
 //add an event listener to give our buttons functionality (using DOM selection)
 //"When the getEmployeeButton gets clicked, execute the getEmployees function"
-document.getElementById("getEmployeeButton").addEventListener("click", getEmployees);
+document.getElementById("getUserButton").addEventListener("click", getEmployees);
 
 //"When the loginButton gets clicked, execute the loginFunction"
 document.getElementById("loginButton").addEventListener("click", loginFunction);
@@ -11,11 +11,11 @@ document.getElementById("loginButton").addEventListener("click", loginFunction);
 
 //getEmployees is an async function which has a fetch request to get employees from our server
 //remember, async makes a function return a Promise (which fetch requests return)
-async function getEmployees() {
+async function getUsers() {
 
     //we will send a fetch request to get out employee data
     //by default, fetch requests send GET requests (see how to send others like POST below)
-    let response = await fetch(url + "/employees", {credentials: "include"});
+    let response = await fetch(url + "/users", {credentials: "include"});
 
     //log the response in the console just to see the response object (good for debugging)
     console.log(response);
@@ -60,7 +60,7 @@ async function getEmployees() {
 
             //append the tr (which we called "row") to the table body (tbody)
             //a new row will be appended FOR every employee that got returned in the fetch()
-            document.getElementById("employeeBody").appendChild(row);
+            document.getElementById("userBody").appendChild(row);
 
         }
         //so here, for every employee object, we create a new row, fill it with data, add it to table
