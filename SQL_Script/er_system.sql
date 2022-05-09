@@ -52,7 +52,6 @@ values (1, 'closed');
 insert into ers_reimbursement_type (reimb_type_id, reimb_type)
 values (1, 'business');
 
-delete from ers_users where ers_username = 'Jason Bourne';
 
 select * from ers_users;
 
@@ -63,6 +62,8 @@ select * from ers_reimbursement;
 select * from ers_reimbursement_status;
 
 select * from ers_reimbursement_type;
+
+delete from ers_users where ers_username = 'Jason Bourne';
 
 drop table ers_users;
 

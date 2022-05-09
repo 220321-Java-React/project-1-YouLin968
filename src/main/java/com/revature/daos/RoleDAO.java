@@ -53,25 +53,16 @@ public class RoleDAO implements RoleDAOInterface {
 	@Override
 	public Role getRoleById(int id) {
 		
-		//use a try-with-resources block to open a DB connection
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
-			//String that lays out the SQL query we want to run
-			//this String has a variable/parameter, the role_id we're searching for is determined at runtime
 			String sql = "select * from ers_user_roles where ers_user_role_id = ?";
 			
-			//we need a PreparedStatement object to fill in variables of our SQL query 
-			PreparedStatement ps = conn.prepareStatement(sql); //conn.prepareStatement() instead of createStatement()
+			PreparedStatement ps = conn.prepareStatement(sql); 
 			
-			//insert the method's argument (int id) as the variable in our SQL query
-			ps.setInt(1, id); //the 1 is referring to the first variable (?) in our SQL String
-			//then the second parameter is the value we want to put into that first variable
+			ps.setInt(1, id); 
 			
-			//Execute the query in a ResultSet object to hold our incoming data
 			ResultSet rs = ps.executeQuery();
 			
-			//the above code gets our data, and now we need to populate that data into a Role object
-			//we can return the new role object right away without assigning it to a variable
 			
 			while(rs.next()) {
 				
@@ -81,11 +72,10 @@ public class RoleDAO implements RoleDAOInterface {
 					);
 				
 			}	
-			//note how we don't need an ArrayList here, since we're only returning one object
 			
 		} catch (SQLException e) {
 			System.out.println("Something went wrong fetching this data!!");
-			e.printStackTrace(); //print stack trace so we actually get some clues as to what went wrong
+			e.printStackTrace(); 
 		}
 		
 		return null;
