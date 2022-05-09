@@ -7,57 +7,77 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.revature.models.Role;
-import com.revature.models.User;
+import com.revature.models.ReimbursementType;
 import com.revature.utils.ConnectionUtil;
 
-public class UserDAO implements UserDAOInterface{
-	
-	RoleDAO rDAO = new RoleDAO();
+public class ReimbursementTypeDAO implements ReimbursementTypeDAOInterface {
 
-	public ArrayList<User> getUsers(){
+	ReimbursementTypeDAO rtDAO = new ReimbursementTypeDAO();
+	
+	//This TEMPORARY method will return the employees from the database
+	//In the future, this method body will actually be communicating directly to the database
+	public ArrayList<ReimbursementType> getReimbursementType(){
 		
 		try(Connection conn = ConnectionUtil.getConnection()){
-			String sql = "select * from ers_users;";
 			
+			//a String that will represent our SQL statement
+			String sql = "select * from employees;";
+			
+			//a Statement object to execute our query 
 			Statement s = conn.createStatement();
 			
+			//execute our query into a ResultSet object, which will hold all the data 
+			//executeQuery() is what actually queries the database! Then we put the records into a ResultSet
 			ResultSet rs = s.executeQuery(sql);
 			
-			ArrayList<User> userList = new ArrayList<>();
+			//Instantiate an ArrayList to put our Employee objects into
+			ArrayList<ReimbursementType> reimbtypeList = new ArrayList<>();
 			
+			//use rs.next() in a while loop to create Employee objects and populate our ArrayList with them.
+			//remember, the ResultSet is what's holding our data. We need to turn it into something Java can read (objects)
 			while(rs.next()) {
-				
-				User u = new User(
-						rs.getInt("ers_users_id"),
-						rs.getString("user_first_name"),
-						rs.getString("user_last_name"),
-						null
+				//Create a new Employee object from each record in the ResultSet
+				//we're using the all args constructor of Employee to fill in new Employee objects with DB data
+				ReimbursementType rt = new ReimbursementType(
+						rs.getInt("employee_id"),
+						rs.getString("first_name"),
+						rs.getString("last_name"),
+						null //there is no JDBC method for getRole... we'll add the Role object in below
+						//this is an extra step we have to take because in the DB, the role_id_fk is an int
+						//but we need a Role object here
 						);
 				
-				int roleFK = rs.getInt("user_role_id_fk");
+				//we need to get the role of each employee somehow...
+				//we need to use the DAO method for getRoleById from the RoleDAO
+				int roleFK = rs.getInt("role_id_fk");
 				
+				//get a Role object from the RoleDAO
 				Role r = rDAO.getRoleById(roleFK);
 				
-				u.setRole(r);
+				//use the SETTER of the Employee class to set the Role object to the one we got from the DB above.
+				rt.setRole(r);
+				//thanks to this setter, our Employee objects can be FULLY initialized (every variable has a value)
 				
-				userList.add(u);
+				//add the fully initialized Employee into the ArrayList
+				reimbtypeList.add(rt);
 			}
 			
-			return userList;
+			//once the while loop ends (when rs.next() == false), return the ArrayList
+			return reimbtypeList;
 			
 		} catch (SQLException e) {
-			System.out.println("Something went wrong selecting all users!");
+			System.out.println("Something went wrong selecting all employees!");
 			e.printStackTrace();
 		}
 		
 		return null;
 		
 	}
-	
+
+
 	//We want a method that can take in a Role title, and return all Employees with that Role
 	@Override
-	public ArrayList<User> getUsersByRole(String title) {
+	public ArrayList<ReimbursementType> getReimbTypeByRole(String title) {
 		
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
@@ -77,17 +97,16 @@ public class UserDAO implements UserDAOInterface{
 			ResultSet rs = ps.executeQuery();
 			
 			//Instantiate an empty ArrayList that we'll fill with the data from the ResultSet
-			ArrayList<User> userList = new ArrayList<>();
-			
+			ArrayList<ReimbursementType> reimbtypeList = new ArrayList<>();
 			
 			//while there are records remaining in the ResultSet...
 			while(rs.next()) {
 				
 				//create new Employee objects based on the data, and fill in the ArrayList
-				User u = new User(
-						rs.getInt("ers_users_id"),
-						rs.getString("ers_first_name"),
-						rs.getString("ers_last_name"),
+				ReimbursementType rt = new ReimbursementType(
+						rs.getInt("employee_id"),
+						rs.getString("first_name"),
+						rs.getString("last_name"),
 						null
 						);
 				
@@ -97,13 +116,13 @@ public class UserDAO implements UserDAOInterface{
 				Role r = rDAO.getRoleById(roleFK);
 				
 				//fill in the previously null Role variable in this new Employee object (with the setter!)
-				u.setRole(r);
+				rt.setRole(r);
 				
 				//fill in the employeeList with each while loop until eventually rs.next() == false.
-				userList.add(u);
+				reimbtypeList.add(rt);
 			}
 			
-			return userList;
+			return reimbtypeList;
 			
 		} catch (SQLException e) {
 			System.out.println("Something went wrong selecting employees by ID");
@@ -115,21 +134,21 @@ public class UserDAO implements UserDAOInterface{
 
 
 	@Override
-	public void insertUser(User user, int role_id) {
+	public void insertReimbursementType(ReimbursementType reimbursementtype, int role_id) {
 	
 		try(Connection conn = ConnectionUtil.getConnection()){
 		
 		//First we need our SQL String that represents the INSERT statement we'll send to the DB
 		//Again, there are variables in this statement, that we can fill out thanks to PreparedStatement
-		String sql = "insert into ers_users (user_first_name, user_last_name, user_role_id_fk)"
+		String sql = "insert into employees (first_name, last_name, role_id_fk)"
 				+ "values (?, ?, ?);";
 				
 		//Instantiate a PreparedStatement to fill in the variables of our initial SQL String
 		PreparedStatement ps = conn.prepareStatement(sql);
 		
 		//fill in the values of our variables using ps.setXYZ()
-		ps.setString(1, user.getErs_first_name());
-		ps.setString(2, user.getErs_last_name());
+		ps.setString(1, employee.getFirst_name());
+		ps.setString(2, employee.getLast_name());
 		ps.setInt(3, role_id); 
 		//note how the DB role_id is an int, but in Java, Employees have a Role OBJECT
 		//this is my workaround of choice... have the user input the id of the desired role when inserting the user data
@@ -138,10 +157,10 @@ public class UserDAO implements UserDAOInterface{
 		ps.executeUpdate();
 		
 		//Tell the user the insert was successful
-		System.out.println("User " + user.getErs_first_name() + " added. Welcome!");
+		System.out.println("Employee " + employee.getFirst_name() + " added. Welcome aboard agagagagaga!");
 			
 		} catch (SQLException e) {
-			System.out.println("Something went wrong inserting User!");
+			System.out.println("Something went wrong inserting Employee!");
 			e.printStackTrace();
 		}
 		
@@ -149,12 +168,12 @@ public class UserDAO implements UserDAOInterface{
 
 
 	@Override
-	public void removeUser(int id) {
+	public void removeReimbursementType(int id) {
 		
 		try(Connection conn = ConnectionUtil.getConnection()){
 			
 			//SQL String that we want to send to the DB
-			String sql = "delete from employees where ers_users_id = ?;";
+			String sql = "delete from employees where employee_id = ?;";
 			
 			//instantiate our PreparedStatement to fill in the variable
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -165,7 +184,7 @@ public class UserDAO implements UserDAOInterface{
 			ps.executeUpdate();
 			
 			//let the user know that the dreams of their former employee have been crushed
-			System.out.println("Get outta here, user #" + id);
+			System.out.println("Get outta here, employee #" + id);
 			
 		} catch (SQLException e) {
 			System.out.println("YOU CAN'T FIRE ME MY FATHER WILL SUE");
@@ -179,10 +198,8 @@ public class UserDAO implements UserDAOInterface{
 	
 	//Ben is leaving this unimplemented... Check RoleDAO for findById functionality
 	@Override
-	public User getUserById(int id) {
+	public ReimbursementType getReimbTypeById(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
 }

@@ -3,7 +3,7 @@ const url = "http://localhost:3000"; //putting our base URL in a variable for cl
 
 //add an event listener to give our buttons functionality (using DOM selection)
 //"When the getEmployeeButton gets clicked, execute the getEmployees function"
-document.getElementById("getUserButton").addEventListener("click", getEmployees);
+document.getElementById("getUserButton").addEventListener("click", getUsers);
 
 //"When the loginButton gets clicked, execute the loginFunction"
 document.getElementById("loginButton").addEventListener("click", loginFunction);
@@ -40,22 +40,22 @@ async function getUsers() {
             //create a data cell for each employee field
             let cell = document.createElement("td");
             //fill the cell with the appropriate employee data
-            cell.innerHTML = employee.employee_id;
+            cell.innerHTML = user.ers_users_id;
             //add the td element (data cell) to the tr element (table row)
             row.appendChild(cell);
 
             //we do this^^^^ for every column in employees
 
             let cell2 = document.createElement("td");
-            cell2.innerHTML = employee.first_name;
+            cell2.innerHTML = user.ers_first_name;
             row.appendChild(cell2);
 
             let cell3 = document.createElement("td");
-            cell3.innerHTML = employee.last_name;
+            cell3.innerHTML = user.ers_last_name;
             row.appendChild(cell3);
 
             let cell4 = document.createElement("td");
-            cell4.innerHTML = employee.role.role_title;
+            cell4.innerHTML = user.role.role_title;
             row.appendChild(cell4);
 
             //append the tr (which we called "row") to the table body (tbody)
@@ -116,7 +116,7 @@ if(response.status === 202){
     let data = await response.json();
 
     //wipe our login row and welcome the user
-    document.getElementById("loginRow").innerText="Welcome " + data.first_name + "!!";
+    document.getElementById("loginRow").innerText="Welcome " + data.ers_first_name + "!!";
 
     //THIS IS PROBABLY WHERE YOUR REDIRECT WOULD BE IF USING MULTIPLE HTML PAGES
     //don't be intimidated, it's an easy google :)
