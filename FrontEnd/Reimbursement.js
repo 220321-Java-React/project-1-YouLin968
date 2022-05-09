@@ -15,7 +15,7 @@ async function getUsers() {
 
     //we will send a fetch request to get out employee data
     //by default, fetch requests send GET requests (see how to send others like POST below)
-    let response = await fetch(url + "/users", {credentials: "include"});
+    let response = await fetch(url + "/ers_users", {credentials: "include"});
 
     //log the response in the console just to see the response object (good for debugging)
     console.log(response);
@@ -32,7 +32,7 @@ async function getUsers() {
         console.log(data);
 
         //For every Employee object we get back from our fetch request, put it in the table
-        for(let employee of data){
+        for(let user of data){
 
             //create a table row
             let row = document.createElement("tr");
@@ -47,15 +47,15 @@ async function getUsers() {
             //we do this^^^^ for every column in employees
 
             let cell2 = document.createElement("td");
-            cell2.innerHTML = user.ers_first_name;
+            cell2.innerHTML = user.user_first_name;
             row.appendChild(cell2);
 
             let cell3 = document.createElement("td");
-            cell3.innerHTML = user.ers_last_name;
+            cell3.innerHTML = user.user_last_name;
             row.appendChild(cell3);
 
             let cell4 = document.createElement("td");
-            cell4.innerHTML = user.role.role_title;
+            cell4.innerHTML = user.role.user_role;
             row.appendChild(cell4);
 
             //append the tr (which we called "row") to the table body (tbody)
@@ -116,7 +116,7 @@ if(response.status === 202){
     let data = await response.json();
 
     //wipe our login row and welcome the user
-    document.getElementById("loginRow").innerText="Welcome " + data.ers_first_name + "!!";
+    document.getElementById("loginRow").innerText="Welcome back " + data.ers_first_name + "!!";
 
     //THIS IS PROBABLY WHERE YOUR REDIRECT WOULD BE IF USING MULTIPLE HTML PAGES
     //don't be intimidated, it's an easy google :)

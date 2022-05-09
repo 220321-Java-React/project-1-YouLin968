@@ -7,11 +7,11 @@ import com.revature.models.User;
 
 public class UserService {
 
-	UserDAO eDAO = new UserDAO();
+	UserDAO uDAO = new UserDAO();
 	
 	public ArrayList<User> getUsers(){
 		
-		ArrayList<User> users = eDAO.getUsers();
+		ArrayList<User> users = uDAO.getUsers();
 		
 		return users;
 	}

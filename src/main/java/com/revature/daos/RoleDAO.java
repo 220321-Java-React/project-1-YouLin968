@@ -58,7 +58,7 @@ public class RoleDAO implements RoleDAOInterface {
 			
 			//String that lays out the SQL query we want to run
 			//this String has a variable/parameter, the role_id we're searching for is determined at runtime
-			String sql = "select * from roles where ers_user_role_id = ?";
+			String sql = "select * from ers_user_roles where ers_user_role_id = ?";
 			
 			//we need a PreparedStatement object to fill in variables of our SQL query 
 			PreparedStatement ps = conn.prepareStatement(sql); //conn.prepareStatement() instead of createStatement()

@@ -31,7 +31,7 @@ public class Launcher {
     				
     			}
     			
-    			).start(300);
+    			).start(3000);
     	
     	
     	app.get("/users", uc.getUsersHandler);
